@@ -15,7 +15,7 @@ To get started with `gpt-repository-loader`, follow these steps:
 4. Run `gpt-repository-loader` with the following command:
 
    ```bash
-   python gpt_repository_loader.py /path/to/git/repository [-p /path/to/preamble.txt] [-o /path/to/output_file.txt]
+   python gpt_repository_loader/gpt_repository_loader.py /path/to/git/repository [-p /path/to/preamble.txt] [-o /path/to/output_file.txt]
    ```
     Replace `/path/to/git/repository` with the path to the Git repository you want to process. Optionally, you can specify a preamble file with -p or an output file with -o. If not specified, the default output file will be named output.txt in the current directory.
 
@@ -25,6 +25,7 @@ To get started with `gpt-repository-loader`, follow these steps:
 1. Make sure you have pipx install
 2. Clone the `gpt-repository-loader` repo
 3. Navigate to the repo root and run `pipx install .`
+4. The tool can now be run directly with `gpt-repository-loader ...`. Auto complete will also work
 
 ## Running Tests
 

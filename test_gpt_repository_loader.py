@@ -2,7 +2,7 @@ import unittest
 import os
 import tempfile
 import shutil
-from gpt_repository_loader import process_repository, get_ignore_list
+from gpt_repository_loader.gpt_repository_loader import process_repository, get_ignore_list
 
 
 class TestGPTRepositoryLoader(unittest.TestCase):
