@@ -21,6 +21,11 @@ To get started with `gpt-repository-loader`, follow these steps:
 
 5. The tool will generate an output.txt file containing the text representation of the repository. You can now use this file as input for AI language models or other text-based processing tasks.
 
+### Installing with `pipx`
+1. Make sure you have pipx install
+2. Clone the `gpt-repository-loader` repo
+3. Navigate to the repo root and run `pipx install .`
+
 ## Running Tests
 
 To run the tests for `gpt-repository-loader`, follow these steps:
