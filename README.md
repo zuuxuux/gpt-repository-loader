@@ -10,3 +10,4 @@ A monolith of the monolith chat app
 - `npm install`
 4. Start the front and backend:
 - `npm start`
+5. Navigate to the webpage at: `localhost:5173`
