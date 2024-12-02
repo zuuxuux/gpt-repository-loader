@@ -10,6 +10,6 @@ Uses vanilla javascript and html at the moment
     - navigate to this directory
     - `npm install`
 3. Create .env file:
-    - copy `.env.example` -> `.env`
+    - copy `.env.local.example` -> `.env.local`
 3. Run a dev version of the app:
     - `npm run dev`

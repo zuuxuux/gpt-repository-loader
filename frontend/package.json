@@ -1,10 +1,6 @@
 {
-    "name": "noovox-frontend",
-    "version": "1.0.0",
-    "scripts": {
-      "dev": "ENDPOINT_URL=http://localhost:8000 vite src"
-    },
-    "devDependencies": {
-      "vite": "^5.0.0"
-    }
+  "name": "noovox-frontend",
+  "scripts": {
+    "dev": "python -m http.server 5173"
   }
+}
