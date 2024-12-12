@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="messageInput" placeholder="Enter message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div id="response"></div>
+
+    <script type="module">
+        import { ENDPOINT_URL } from './src/config.js';
+
+        window.sendMessage = async function() {
+            const message = document.getElementById('messageInput').value;
+            try {
+                const response = await fetch(`${ENDPOINT_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+                document.getElementById('response').textContent = data.response;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
