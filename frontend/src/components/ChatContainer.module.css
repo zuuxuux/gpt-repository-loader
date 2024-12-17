@@ -1,0 +1,33 @@
+.container {
+    height: 80vh;
+    width: 80vw;
+    margin: 10vh auto 0;
+  }
+  
+  .scrollArea {
+    height: calc(80vh - 80px);
+    padding: 1rem;
+  }
+  
+  .message {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+  
+  .userMessage {
+    justify-content: flex-end;
+  }
+  
+  .botMessage {
+    justify-content: flex-start;
+  }
+  
+  .inputForm {
+    border-top: 1px solid hsl(var(--border));
+    padding: 1rem;
+  }
+  
+  .inputContainer {
+    display: flex;
+    gap: 0.5rem;
+  }
