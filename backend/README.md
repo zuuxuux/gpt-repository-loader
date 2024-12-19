@@ -61,7 +61,7 @@ Create a Python virtual environment in the **backend** directory.
 ### **Linux/macOS**
 
 ```bash
-python3 -m venv env
+python -m venv env
 source env/bin/activate
 ```
 
@@ -193,6 +193,7 @@ print(f'.env file created at {env_file_path}');
 "
 ```
 
+
 ### **Interactive Steps**
 When you run the above command, you will be prompted to enter the following information:
 
@@ -213,7 +214,7 @@ The `.env` file will be generated automatically in the current directory.
 
 ## **7. Running the Backend**
 
-You can run the backend server either through **PyCharm** or directly via the **terminal**.
+You can run the backend server either through **PyCharm**, **terminal**, or directly via the provided `app.py` script.
 
 ### **A. Run the Server via Terminal**
 
@@ -230,11 +231,23 @@ You can run the backend server either through **PyCharm** or directly via the **
    python noovox/server.py
    ```
 
-3. **Access the API**
-   Once the server is running, access the API at:
+### **B. Run the Server via Script**
 
-    - Base URL: `http://localhost:5000`
-    - Swagger Documentation: `http://localhost:5000/swagger`
+If you prefer a simplified setup, you can run the `app.py` script to handle environment activation and server startup:
+
+1. Ensure the script has execute permissions (Linux/macOS):
+
+   ```bash
+   chmod +x app.py
+   ```
+
+2. Run the script:
+
+   ```bash
+   python app.py
+   ```
+
+This will automatically activate the virtual environment, verify the configuration, and start the backend server.
 
 ---
 
