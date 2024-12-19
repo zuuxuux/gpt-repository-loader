@@ -1,0 +1,395 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Noovox API",
+        "description": "API for the Noovox content platform."
+    },
+    "host": "localhost:5000",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "summary": "Get all users",
+                "responses": {
+                    "200": {
+                        "description": "A list of users",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new user",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{user_id}": {
+            "get": {
+                "summary": "Get a user by ID",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a user",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User updated",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a user",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User deleted"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/chats": {
+            "get": {
+                "summary": "Get all chats",
+                "responses": {
+                    "200": {
+                        "description": "A list of chats",
+                        "schema": {
+                            "$ref": "#/definitions/Chat"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new chat",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "chat",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Chat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Chat created",
+                        "schema": {
+                            "$ref": "#/definitions/Chat"
+                        }
+                    }
+                }
+            }
+        },
+        "/chats/{chat_id}": {
+            "get": {
+                "summary": "Get a chat by ID",
+                "parameters": [
+                    {
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chat details",
+                        "schema": {
+                            "$ref": "#/definitions/Chat"
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a chat",
+                "parameters": [
+                    {
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Chat deleted"
+                    },
+                    "404": {
+                        "description": "Chat not found"
+                    }
+                }
+            }
+        },
+        "/chats/{chat_id}/messages": {
+            "get": {
+                "summary": "Get messages for a chat",
+                "parameters": [
+                    {
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of messages",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ChatMessage"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Send a message in a chat",
+                "parameters": [
+                    {
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "message",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ChatMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Message sent",
+                        "schema": {
+                            "$ref": "#/definitions/ChatMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/content_tracking": {
+            "get": {
+                "summary": "Get all content tracking records",
+                "responses": {
+                    "200": {
+                        "description": "A list of content tracking records",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ContentTracking"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Track user content interaction",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "tracking",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ContentTracking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Content tracking record created",
+                        "schema": {
+                            "$ref": "#/definitions/ContentTracking"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "username",
+                "email"
+            ]
+        },
+        "Chat": {
+            "type": "object",
+            "properties": {
+                "chat_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "user_id"
+            ]
+        },
+        "ChatMessage": {
+            "type": "object",
+            "properties": {
+                "message_id": {
+                    "type": "integer"
+                },
+                "chat_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "sender_type": {
+                    "type": "string",
+                    "enum": [
+                        "user",
+                        "system",
+                        "assistant"
+                    ]
+                },
+                "message_text": {
+                    "type": "string"
+                },
+                "sent_at": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "chat_id",
+                "user_id",
+                "sender_type",
+                "message_text"
+            ]
+        },
+        "ContentTracking": {
+            "type": "object",
+            "properties": {
+                "tracking_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "content_type": {
+                    "type": "string",
+                    "enum": [
+                        "view",
+                        "like",
+                        "analysis"
+                    ]
+                },
+                "content_id": {
+                    "type": "integer"
+                },
+                "tracked_at": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "user_id",
+                "content_type",
+                "content_id"
+            ]
+        }
+    }
+}
