@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { Input } from "@/components/ui/Input"
+import { Card } from "@/components/ui/Card"
+import { ScrollArea } from "@/components/ui/ScrollArea"
 import styles from './ChatContainer.module.css';
 
 interface Message {

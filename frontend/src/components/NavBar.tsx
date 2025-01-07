@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/DropdownMenu"
 import { User } from "lucide-react"
 import styles from './NavBar.module.css'
 
