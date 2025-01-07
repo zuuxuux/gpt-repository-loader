@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Card } from "@/components/ui/Card"
 import { ScrollArea } from "@/components/ui/ScrollArea"
+import { ChatBubble } from "@/components/ui/ChatBubble"
 import styles from './ChatContainer.module.css';
 
 interface Message {
   id: string;
   content: string;
-  sender: 'user' | 'bot';
+  sender: 'user' | 'system';
   timestamp: Date;
 }
 
@@ -40,14 +41,14 @@ const ChatContainer: React.FC = () => {
       });
 
       const data = await response.json();
-      const botMessage = {
+      const systemMessage = {
         id: (Date.now() + 1).toString(),
         content: data.response,
-        sender: 'bot' as const,
+        sender: 'system' as const,
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, botMessage]);
+      setMessages(prev => [...prev, systemMessage]);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -58,21 +59,14 @@ const ChatContainer: React.FC = () => {
   return (
     <Card className={styles.container}>
       <ScrollArea className={styles.scrollArea}>
-        {messages.map((message) => (
-          <div 
-            key={message.id} 
-            className={`${styles.message} ${message.sender === 'user' ? styles.userMessage : ''}`}
-          >
-            <div 
-              className={`${styles.messageContent} ${
-                message.sender === 'user' ? styles.userMessageContent : styles.botMessageContent
-              }`}
-            >
-              {message.content}
-            </div>
-          </div>
-        ))}
-      </ScrollArea>
+      {messages.map((message) => (
+        <ChatBubble
+          key={message.id}
+          content={message.content}
+          variant={message.sender}
+        />
+      ))}
+</ScrollArea>
       <div className={styles.inputArea}>
         <form onSubmit={handleSend} className={styles.inputContainer}>
           <Input

@@ -1,0 +1,45 @@
+/* src/components/ui/ChatBubble.module.css */
+.message {
+    display: flex;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .system {
+    justify-content: flex-start;
+  }
+  
+  .user {
+    justify-content: flex-end;
+  }
+  
+  .system .gradientBorder {
+    border-radius: 0.5rem 0.5rem 0.5rem 0;
+  }
+  
+  .system .messageContent {
+    border-radius: 0.5rem 0.5rem 0.5rem 0;
+  }
+  
+  .user .gradientBorder {
+    border-radius: 0.5rem 0.5rem 0 0.5rem;
+  }
+  
+  .user .messageContent {
+    border-radius: 0.5rem 0.5rem 0 0.5rem;
+  }
+  
+  .gradientBorder {
+    position: relative;
+    background: linear-gradient(to right, rgb(251 191 36), rgb(168 85 247));
+    padding: 1px;
+    max-width: 80%;
+  }
+  
+  .messageContent {
+    background-color: rgb(30 41 59);
+    color: white;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
