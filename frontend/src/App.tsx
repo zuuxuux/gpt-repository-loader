@@ -8,7 +8,6 @@ import './App.css'
 function App() {
   return (
     <div>
-      <NavBar />
       <div className="container mx-auto">
         <ChatContainer />
       </div>

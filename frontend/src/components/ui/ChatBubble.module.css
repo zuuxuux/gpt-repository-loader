@@ -13,31 +13,34 @@
     justify-content: flex-end;
   }
   
-  .system .gradientBorder {
+  .system .chatBubbleBorder {
     border-radius: 0.5rem 0.5rem 0.5rem 0;
+    border: 0.5px solid #7E40FF;
+    background: none;
   }
   
   .system .messageContent {
     border-radius: 0.5rem 0.5rem 0.5rem 0;
   }
   
-  .user .gradientBorder {
+  .user .chatBubbleBorder {
     border-radius: 0.5rem 0.5rem 0 0.5rem;
+    border: 0.5px solid #FF9800;
+    background: none;
   }
   
   .user .messageContent {
     border-radius: 0.5rem 0.5rem 0 0.5rem;
   }
   
-  .gradientBorder {
+  .chatBubbleBorder {
     position: relative;
-    background: linear-gradient(to right, rgb(251 191 36), rgb(168 85 247));
-    padding: 1px;
+    padding: 0.6px;
     max-width: 80%;
   }
   
   .messageContent {
-    background-color: rgb(30 41 59);
+    background-color: #131D2D;
     color: white;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;

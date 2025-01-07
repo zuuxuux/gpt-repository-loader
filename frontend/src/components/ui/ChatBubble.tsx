@@ -15,7 +15,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 }) => {
   return (
     <div className={`${styles.message} ${styles[variant]} ${className}`}>
-      <div className={styles.gradientBorder}>
+      <div className={styles.chatBubbleBorder}>
         <div className={styles.messageContent}>
           {content}
         </div>

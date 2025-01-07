@@ -1,73 +1,53 @@
 .container {
     height: 600px;
-    width: 90vw;
+    width: 50vw;
     max-width: none;
     margin: 2rem auto;
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-.scrollArea {
+    border-width: 0;
+  }
+  
+  .scrollArea {
     height: calc(100% - 70px);
     padding: 1.5rem;
-}
-
-.message {
+  }
+  
+  .inputArea {
+    padding: 0.75rem;
+  }
+  
+  .inputContainer {
     display: flex;
-    margin-bottom: 1rem;
-    gap: 1rem;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.userMessage {
-    justify-content: flex-end;
-}
-
-.messageContent {
-    max-width: 80%;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-}
-
-.userMessageContent {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-}
-
-.botMessageContent {
-    background: hsl(var(--muted));
-    color: hsl(var(--muted-foreground));
-}
-
-.inputContainer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* InputArea could rely on its line-height and padding to define the height */
-.inputArea {
-  flex: 1;
-  line-height: 1.5;    /* 1.5 * 16px = 24px text */
-  padding: 8px;
-  font-size: 16px;
-}
-
-/* SendButton’s lg size might be min-height: 40px */
-.lg {
-  width: 40px;
-  min-height: 40px;
-}
-
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  /* 
+    Let this container hold the input and button together 
+    so the button can appear inside the input area 
+  */
+  .inputWrapper {
+    position: relative;
+    display: flex;
+    flex: 1;
+  }
+  
+  /* 
+    Absolute position to the right inside .inputWrapper 
+    Without overriding background or border, 
+    so the gradient ring from .sendButton remains. 
+  */
+  .sendIcon {
+    position: absolute;
+    top: 50%;
+    right: 0.6rem;
+    transform: translateY(-50%);
+    z-index: 2; /* ensure it's above the input */
+  }
+  
+  /* (Optional) Adjust if you have other .sendIcon hover states, etc. */
+  .sendIcon:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  
