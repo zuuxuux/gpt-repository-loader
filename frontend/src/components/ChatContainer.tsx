@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
+import { InputArea } from "@/components/ui/InputArea"
 import { Card } from "@/components/ui/Card"
 import { ScrollArea } from "@/components/ui/ScrollArea"
 import { ChatBubble } from "@/components/ui/ChatBubble"
+import { SendButton } from "@/components/ui/SendButton";
 import styles from './ChatContainer.module.css';
 
 interface Message {
@@ -66,18 +66,20 @@ const ChatContainer: React.FC = () => {
           variant={message.sender}
         />
       ))}
-</ScrollArea>
+      </ScrollArea>
       <div className={styles.inputArea}>
         <form onSubmit={handleSend} className={styles.inputContainer}>
-          <Input
+          <InputArea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
             disabled={isLoading}
           />
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Sending...' : 'Send'}
-          </Button>
+          <SendButton 
+            onClick={() => console.log('Sending...')}
+            size="lg"
+            disabled={false}
+          />
         </form>
       </div>
     </Card>

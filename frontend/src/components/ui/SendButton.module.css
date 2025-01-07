@@ -1,0 +1,45 @@
+.sendButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff8a00, #da1b60);
+  padding: 2px; /* so the gradient shows as a ring */
+  box-sizing: border-box;
+  background-clip: content-box, border-box;
+  -webkit-background-clip: content-box, border-box;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.sendButton:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon {
+  color: #fff;
+  width: 24px;
+  height: 24px;
+}
+
+/* Size variants */
+.sm {
+  width: 40px;
+  height: 40px;
+}
+
+.md {
+  width: 50px;
+  height: 50px;
+}
+
+.lg {
+  width: 60px;
+  height: 60px;
+}
