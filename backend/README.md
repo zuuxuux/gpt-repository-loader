@@ -142,7 +142,22 @@ sudo systemctl start mysql
 
 ---
 
-### **C. Create the Database Schema**
+### **C. Change the root password**
+#### **Ubuntu/Linux**
+Connect to MySQL
+```bash
+mysql -u root -p
+```
+And then enter the following command, substituing your desired password:
+```sql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_new_password_here';
+FLUSH PRIVILEGES;
+exit;
+```
+
+---
+
+### **D. Create the Database Schema**
 
 1. Run the SQL script located at `noovox/db_schema.sql` to set up the database schema. Use the following command:
 
