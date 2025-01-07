@@ -4,7 +4,7 @@
   justify-content: center;
   border: none;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff8a00, #da1b60);
+  background: linear-gradient(135deg, #9901FE, #EC7B2F);
   padding: 2px;
   box-sizing: border-box;
   background-clip: content-box, border-box;
@@ -24,8 +24,8 @@
 
 .icon {
   color: #fff;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
 }
 
 /* Size variants */
