@@ -12,7 +12,7 @@ interface Message {
   timestamp: Date;
 }
 
-const ChatContainer = () => {
+const ChatContainer: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

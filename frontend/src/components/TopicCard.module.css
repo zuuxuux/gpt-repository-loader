@@ -1,0 +1,75 @@
+.cardContainer {
+  background: linear-gradient(to right, rgb(251 191 36), rgb(168 85 247));
+  padding: 1px;
+  border-radius: 0.8rem;
+  width: 20rem;
+}
+
+.card {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgb(30 41 59);
+  font-family: sans-serif;
+  color: white;
+}
+
+.title {
+  margin: 0;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.dividerContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.divider {
+  flex-grow: 1;
+  height: 1px;
+  background-color: rgb(71 85 105);
+}
+
+.thumbContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.thumbButton {
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgb(148 163 184);
+}
+
+.thumbButton:hover {
+  color: rgb(203 213 225);
+}
+
+.progressContainer {
+  margin-bottom: 1rem;
+}
+
+.progressLabel {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.progressBar {
+  background-color: rgb(51 65 85);
+  border-radius: 0.25rem;
+  height: 0.5rem;
+}
+
+.progressFill {
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  transition-property: all;
+  transition-duration: 300ms;
+}
