@@ -25,13 +25,15 @@
     justify-content: center;
     transition: opacity 0.2s;
   }
-  
+/*   
   .mainNavItem:hover {
     opacity: 0.8;
-  }
+  } */
   
   .mainNavItemActive {
     opacity: 1;
-    border-left: 3px solid white; 
+    background: #1e293b;
+    border-top-left-radius: 9999px;
+    border-bottom-left-radius: 9999px;
   }
   
