@@ -1,0 +1,31 @@
+.subNav {
+    position: fixed;
+    top: 0;
+    left: 60px; /* offset by the width of the MainNav */
+    width: 180px;
+    height: 100vh;
+    background-color: rgb(30, 41, 59); /* or your custom background color */
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+  }
+  
+  .subNavItem {
+    background: none;
+    border: none;
+    color: white;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .subNavItem:hover {
+    background-color: rgb(51, 65, 85);
+  }
+  
+  .subNavItemActive {
+    background-color: rgb(71, 85, 105);
+    font-weight: 600;
+  }
+  
