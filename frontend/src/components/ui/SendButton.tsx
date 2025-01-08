@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import styles from './SendButton.module.css';
+import SendButtonIcon from '@/assets/send-button.svg';
 
 type ButtonSize = 'sm' | 'md' | 'lg';
 
@@ -25,8 +26,10 @@ const SendButton: React.FC<SendButtonProps> = ({
       {...props}
     >
       {/* Lucide-React up arrow icon */}
-      <ArrowUp className={styles.icon} />
+      <img src={SendButtonIcon} alt="Send text" />
+
     </button>
+    
   );
 };
 
