@@ -1,9 +1,24 @@
 /* src/components/ui/ChatBubble.module.css */
 .message {
-    display: flex;
-    margin-bottom: 1rem;
-    padding: 0 1rem;
-  }
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+  
+  /* NEW: Add an animation for float-in from the bottom */
+  animation: floatInBottom 0.3s ease-out;
+}
+
+/* Keyframes for the "float in" effect */
+@keyframes floatInBottom {
+0% {
+  opacity: 0;
+  transform: translateY(50px);
+}
+100% {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
   
   .system {
     justify-content: flex-start;
