@@ -61,7 +61,7 @@
     /* If you had the Card doing some border radius, that’s fine. */
     display: flex;
     flex-direction: column;
-    height: 600px; /* or whatever you like */
+    height: 80vh; /* or whatever you like */
     width: 50vw;
     margin: 2rem auto;
     border: none;
@@ -75,9 +75,11 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;               /* Space between each .ChatBubble */
+    height: 100vh;
   }
 
     
   .inputArea {
     padding: 0.75rem;
+    margin-top: 40px;
   }
