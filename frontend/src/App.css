@@ -51,3 +51,42 @@
   align-items: center;
   min-height: 100vh;
 }
+
+/* App Container: Full-screen layout */
+.appContainer {
+  display: flex; /* Arrange children horizontally */
+  height: 90vh; /* Take up the full viewport height */
+  width: 100%; /* Full width */
+  overflow: hidden; /* Prevent overflow in any direction */
+}
+
+/* Main Content (Chat + Topics) */
+.mainContent {
+  flex: 1; /* Take up remaining space left of the SideNav */
+  display: flex;
+  flex-direction: column; /* Stack ChatContainer and TopicsGrid vertically */
+  overflow-y: auto; /* Allow vertical scrolling if needed */
+}
+
+/* ChatContainer (First Section in Main Content) */
+.chatContainer {
+  flex: 1; /* Grow to fill space */
+  padding: 1rem;
+  height: 100%; /* Fill remaining height */
+  overflow-y: auto; /* Scrollable if chat messages overflow */
+  margin: 0 0 0 0;
+}
+
+/* Topics Grid (Optional Section below ChatContainer) */
+.topicsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem; /* Spacing between cards */
+  padding: 1rem;
+}
+
+/* Side Navigation */
+.sideNav {
+  width: 0; /* Fixed width */
+  overflow-y: auto; /* Ensure it can scroll if needed */
+}

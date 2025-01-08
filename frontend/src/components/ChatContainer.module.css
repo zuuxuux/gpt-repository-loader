@@ -12,10 +12,6 @@
     padding: 1.5rem;
   }
   
-  .inputArea {
-    padding: 0.75rem;
-  }
-  
   .inputContainer {
     display: flex;
     align-items: center;
@@ -33,11 +29,7 @@
     flex: 1;
   }
   
-  /* 
-    Absolute position to the right inside .inputWrapper 
-    Without overriding background or border, 
-    so the gradient ring from .sendButton remains. 
-  */
+
   .sendIcon {
     position: absolute;
     top: 50%;
@@ -51,3 +43,41 @@
     opacity: 0.9;
   }
   
+  .messagesWrapper {
+    /* The actual content container inside ScrollArea, which you reference with messagesRef */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  
+    /* Enough height so it can scroll. You can also do min-height or something else. */
+    min-height: 100%;
+    /* The important part: ensure overflow so we can measure scrollHeight + scrollTop. */
+    overflow: auto;
+    /* You could also rely on Radix's built-in scroll styling if you prefer, 
+       but this is the simplest approach. */
+  }
+
+  .chatContainer {
+    /* If you had the Card doing some border radius, that’s fine. */
+    display: flex;
+    flex-direction: column;
+    height: 600px; /* or whatever you like */
+    width: 50vw;
+    margin: 2rem auto;
+    border: none;
+    /* etc. */
+  }
+
+  .messagesArea {
+    flex: 1;                 /* Fill up as much vertical space as possible */
+    overflow-y: auto;        /* Scroll inside here, not the window */
+    padding: 1.5rem;         /* Some padding around messages */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;               /* Space between each .ChatBubble */
+  }
+
+    
+  .inputArea {
+    padding: 0.75rem;
+  }
