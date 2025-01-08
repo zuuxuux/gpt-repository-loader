@@ -93,14 +93,11 @@ const ChatContainer: React.FC = () => {
       <div className={styles.inputArea}>
         <form onSubmit={handleSend} className={styles.inputContainer}>
         <InputArea
-  value={input}
-  placeholder="Type a message..."
-  disabled={isLoading}
-  style={{
-    overflowY: 'hidden',
-    resize: 'none',   // to prevent manual resizing
-  }}
-/>
+          onChange={(e) => setInput(e.target.value)}
+          value={input}
+          placeholder="Type a message..."
+          disabled={isLoading}
+        />
           <SendButton 
             size="lg"
             disabled={false}

@@ -3,7 +3,7 @@
   display: flex;
   margin-bottom: 0.5rem;
   padding: 0 1rem;
-  
+  text-align: left;
   /* NEW: Add an animation for float-in from the bottom */
   animation: floatInBottom 0.3s ease-out;
 }

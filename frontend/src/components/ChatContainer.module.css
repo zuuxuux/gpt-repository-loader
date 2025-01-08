@@ -14,10 +14,11 @@
   
   .inputContainer {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 8px;
     width: 100%;
   }
+  
   
   /* 
     Let this container hold the input and button together 
