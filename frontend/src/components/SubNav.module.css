@@ -13,9 +13,10 @@
   .subNavItem {
     /* Existing styles */
     background: none;
-    border-radius: 9999px;
+    border-radius: 30px;
     color: white;
-    padding: 0.2rem 1rem;
+    padding: 8px;
+    margin: 8px;
     cursor: pointer;
     text-align: left; /* Left-align text */
     display: flex; /* Use flexbox to align the icon and text */
@@ -33,13 +34,12 @@
   
   .subNavItem:hover {
     border-width: 2px;
-    border-color: #FF9800;
+    border-color: #ff990083;
   }
   
   
   .subNavItemActive {
-    /* If you want the active state to stand out,
-       you could invert the colors or simply keep the same. Example: */
+    background-color: #131D2D;
     border-width: 2px;
     border-color: #FF9800;
     font-weight: 600;

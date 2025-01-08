@@ -13,8 +13,17 @@ interface Message {
   timestamp: Date;
 }
 
+const defaultMessages: Message[] = [
+  {
+    id: '1',
+    content: 'Hi John, what was the highlight of your week?',
+    sender: 'system',
+    timestamp: new Date()
+  }
+];
+
 const ChatContainer: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(defaultMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 

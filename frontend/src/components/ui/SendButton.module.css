@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 50%;
+  border-radius: 30px;
   background: linear-gradient(135deg, #9901FE, #EC7B2F);
   padding: 2px;
   box-sizing: border-box;
