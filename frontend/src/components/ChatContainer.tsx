@@ -92,12 +92,15 @@ const ChatContainer: React.FC = () => {
       {/* Fixed input area at bottom of the card */}
       <div className={styles.inputArea}>
         <form onSubmit={handleSend} className={styles.inputContainer}>
-          <InputArea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
-            disabled={isLoading}
-          />
+        <InputArea
+  value={input}
+  placeholder="Type a message..."
+  disabled={isLoading}
+  style={{
+    overflowY: 'hidden',
+    resize: 'none',   // to prevent manual resizing
+  }}
+/>
           <SendButton 
             size="lg"
             disabled={false}
