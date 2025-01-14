@@ -1,0 +1,57 @@
+services:
+  db:
+    image: mysql:8
+    container_name: noovox_db
+    environment:
+      MYSQL_ROOT_PASSWORD: supersecret
+      MYSQL_DATABASE: noovox
+    # For ephemeral DB usage, we usually don’t need to expose ports externally:
+    # ports:
+    #   - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # "app" service for running the actual Flask + front-end server
+  app:
+    build: .
+    container_name: noovox_app
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: supersecret
+      MYSQL_DATABASE: noovox
+      # Possibly pass front-end env variables if needed
+      # VITE_BACKEND_URL: http://app:5000/api
+    ports:
+      - "5000:5000"
+    command: >
+      bash -c "
+        # Directly start the server (no tests!)
+        python noovox/db_init.py &&
+        python app.py
+      "
+
+  # "test" service for running tests
+  test:
+    build: .
+    container_name: noovox_test_runner
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: supersecret
+      MYSQL_DATABASE: noovox
+    command: >
+      bash -c "
+        # 1) Initialize the DB schema
+        python scripts/db_init.py &&
+        # 2) Run tests
+        pytest
+      "

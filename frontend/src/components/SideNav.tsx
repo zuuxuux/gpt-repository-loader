@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './SideNav.module.css';
 import MainNav from '@/components/MainNav';
 import SubNav from '@/components/SubNav';

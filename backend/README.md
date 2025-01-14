@@ -274,3 +274,10 @@ After completing all the above steps, the backend should run seamlessly in your 
 - Customize database credentials by modifying the `.env` file.
 
 ---
+
+## Running with docker
+## Running in Docker
+1. Build and start the containers:
+```bash
+docker-compose up --build
+```

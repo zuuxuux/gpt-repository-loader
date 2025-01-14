@@ -1,7 +1,5 @@
 // src/App.tsx
 import ChatContainer from './components/ChatContainer';
-import TopicCard from './components/TopicCard';
-import { mockTopics } from './data/topics';
 import './App.css';
 import SideNav from './components/SideNav';
 

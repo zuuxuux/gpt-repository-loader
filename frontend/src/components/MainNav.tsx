@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './MainNav.module.css';
 import { MessageSquare, User, Settings } from 'lucide-react';
 

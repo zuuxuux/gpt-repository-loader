@@ -1,5 +1,4 @@
 import React from 'react';
-import { ArrowUp } from 'lucide-react';
 import styles from './SendButton.module.css';
 import SendButtonIcon from '@/assets/send-button.svg';
 
