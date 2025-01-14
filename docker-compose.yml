@@ -1,30 +1,16 @@
 services:
+  # MySQL test DB
   test-db:
     image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: noovox
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-
+    # environment, healthcheck, etc.
+  
+  # "app" which is the same container you just built
   app:
     build: .
     ports:
       - "5000:5000"
-    command: >
-      bash -c "
-        python app.py
-      "
-
-  test:
-    build: .
     depends_on:
-      test-db:
-        condition: service_healthy
+      - test-db
     environment:
       MYSQL_HOST: test-db
       MYSQL_USER: root
@@ -32,23 +18,47 @@ services:
       MYSQL_DATABASE: noovox
     command: >
       bash -c "
-        /app/scripts/wait-for test-db:3306 --timeout=60 && \
-        
-        echo $$MYSQL_HOST && \
-        mysql -h $$MYSQL_HOST -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE < noovox/db_schema.sql &&
-        pytest -s --capture=no
+        /app/scripts/wait-for test-db:3306 --timeout=60 &&
+        python app.py
       "
 
-  e2e:
-    build: 
-      context: .
+  # "test" service for python tests
+  test:
+    build: .
     depends_on:
-      - app
+      - test-db
     environment:
-      # pass in VITE_BACKEND_URL or set any needed ENV
-      VITE_BACKEND_URL: VITE_BACKEND_URL=http://localhost:5000/api
+      MYSQL_HOST: test-db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: noovox
     command: >
       bash -c "
-        /app/scripts/wait-for app:5000 && /app/scripts/wait-for app:5173 && --timeout=60 &&
-        npx playwright test
+        /app/backend/scripts/wait-for db:3306 --timeout=60 -- echo 'DB is up!' &&
+
+        mysql -h $$MYSQL_HOST -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE < /app/backend/noovox/db_schema.sql &&
+        
+        pytest -s --capture=no backend/tests &&
+        PYTEST_EXIT=$$? &&
+        if [ $$PYTEST_EXIT -ne 0 ]; then
+          echo 'Pytest failed. Exiting...' &&
+          exit $$PYTEST_EXIT;
+        fi &&
+
+        cd /app/frontend &&
+        python /app/backend/noovox/server.py &
+        cd /app &&
+        echo 'Backend started, wait for it' &&
+        /app/backend/scripts/wait-for localhost:5000 --timeout=60 -- echo 'Backend is up!' &&
+
+        echo 'Running frontend tests (Playwright)...' &&
+        npx playwright test &&
+        PLAYWRIGHT_EXIT=$$? &&
+        if [ $$PYTEST_EXIT -ne 0 ]; then
+          echo 'Playwright tests failed. Exiting...' &&
+          exit $$PLAYWRIGHT_EXIT;
+        fi &&
+
+        echo 'All tests passed!' &&
+        exit 0
       "

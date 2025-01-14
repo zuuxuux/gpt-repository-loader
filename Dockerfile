@@ -1,38 +1,51 @@
-# ---------------------------
-# Stage 1: Build the front-end
-# ---------------------------
-FROM node:18 AS frontend-builder
-WORKDIR /app-frontend
-
-# Copy your front-end code
-COPY frontend/package.json frontend/package-lock.json ./
-RUN npm install
-COPY frontend/ ./
-RUN npm run build
-# After build, you'll have a /app-frontend/dist folder
-
-# ----------------------------------------
-# Stage 2: Build the Python back-end image
-# ----------------------------------------
+# Start from a base that has Python *and* Node, or install Node in python:3.13-slim
+# For simplicity, let's pick python:3.13-slim and manually install Node.
 FROM python:3.13-slim
-RUN apt-get update && apt-get install -y default-mysql-client
-RUN apt-get install -y netcat-traditional
+
+# 1) Install system dependencies for both Python & Node
+RUN apt-get update && apt-get install -y \
+    nodejs npm \
+    netcat-traditional \
+    default-mysql-client \
+    # (Optional) any libs needed for Playwright or other build steps
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy requirements early for caching
+# 2) Copy and install Python dependencies
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy your entire backend
-COPY backend/ ./
+# 3) Copy your entire backend code
+COPY backend/ ./backend
 
-# Copy the built front-end files from Stage 1 into Flask's static folder
-COPY --from=frontend-builder /app-frontend/dist ./noovox/static_frontend
+# install noovox
+WORKDIR /app/backend
+RUN pip install .
 
-# If you have a setup.py or a pyproject.toml, you can install the back-end as a package:
-RUN pip install --no-cache-dir .
+# 4) Copy your frontend code
+#    If your frontend is in a folder named 'frontend'
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
 
+# (Optional) Install Playwright, if you want to run E2E tests here
+RUN npm install -g playwright
+
+COPY frontend/ ./
+RUN npm run build
+
+# 5) Copy the built frontend into your Python backend’s static directory
+WORKDIR /app
+RUN mkdir -p noovox/static_frontend
+RUN cp -R /app/frontend/dist/* noovox/static_frontend
+
+# 6) (Optional) If you have a Python package for the backend, install it
+# RUN pip install --no-cache-dir -e ./backend
+
+# Expose the Flask port
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+# 7) Default command: run your Flask server
+CMD ["python", "backend/app.py"]
