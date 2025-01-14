@@ -36,5 +36,5 @@ services:
         
         echo $$MYSQL_HOST && \
         mysql -h $$MYSQL_HOST -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE < noovox/db_schema.sql &&
-        pytest
+        pytest -s --capture=no
       "

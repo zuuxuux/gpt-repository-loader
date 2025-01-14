@@ -29,6 +29,11 @@ app.register_blueprint(swagger_ui_blueprint, url_prefix=swagger_url)
 
 
 def get_db_connection():
+    print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!! {MYSQL_HOST} !!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(f"MYSQL_HOST: {MYSQL_HOST}")
+    print(f"MYSQL_USER: {MYSQL_USER}")
+    print(f"MYSQL_PASSWORD: {MYSQL_PASSWORD}")
+    print(f"MYSQL_DATABASE: {MYSQL_DATABASE}")
     return mysql.connector.connect(
         host=MYSQL_HOST,
         user=MYSQL_USER,
@@ -50,14 +55,39 @@ def get_users():
 
 @app.route('/api/users', methods=['POST'])
 def create_user():
+    print("\n--- Creating user ---")
     data = request.json
+    print(f"Received data: {data}")
+    
     conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO users (username, email) VALUES (%s, %s)", (data['username'], data['email']))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(data), 201
+    print(f"Connected to database: {conn.database}")
+    print(f"Connected to host: {conn.server_host}")
+    
+    cursor = conn.cursor(dictionary=True)
+    
+    # Insert the user
+    try:
+        print("Attempting to insert user...")
+        cursor.execute("INSERT INTO users (username, email) VALUES (%s, %s)", 
+                      (data['username'], data['email']))
+        
+        # Get the new user's ID
+        new_user_id = cursor.lastrowid
+        print(f"Inserted user with ID: {new_user_id}")
+        
+        # Fetch the complete new user record
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", (new_user_id,))
+        new_user = cursor.fetchone()
+        print(f"Retrieved user data: {new_user}")
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return jsonify(new_user), 201
+    except Exception as e:
+        print(f"Error creating user: {e}")
+        raise
 
 
 @app.route('/api/users/<int:user_id>', methods=['GET'])
