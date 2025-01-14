@@ -38,3 +38,17 @@ services:
         mysql -h $$MYSQL_HOST -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE < noovox/db_schema.sql &&
         pytest -s --capture=no
       "
+
+  e2e:
+    build: 
+      context: .
+    depends_on:
+      - app
+    environment:
+      # pass in VITE_BACKEND_URL or set any needed ENV
+      VITE_BACKEND_URL: VITE_BACKEND_URL=http://localhost:5000/api
+    command: >
+      bash -c "
+        /app/scripts/wait-for app:5000 && /app/scripts/wait-for app:5173 && --timeout=60 &&
+        npx playwright test
+      "

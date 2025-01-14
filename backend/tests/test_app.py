@@ -174,10 +174,12 @@ def test_send_chat_message(client):
     response = client.post(f'/api/chats/{created_chat["chat_id"]}/messages', json=message_data)
     assert response.status_code == 201
     data = response.get_json()
-    assert data['sender_type'] == "user"
-    assert data['message_text'] == "Hello from a test!"
-    assert data['user_id'] == created_user['user_id']
-    assert data['chat_id'] == created_chat['chat_id']
+    assert len(data) > 0
+    datum = data[0]
+    assert datum['sender_type'] == "user"
+    assert datum['message_text'] == "Hello from a test!"
+    assert datum['user_id'] == created_user['user_id']
+    assert datum['chat_id'] == created_chat['chat_id']
 
 def test_get_chat_messages(client):
     # Create a user first
