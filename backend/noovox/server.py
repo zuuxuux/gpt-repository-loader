@@ -1,16 +1,17 @@
 import os
 import sys
 
+from flask import Flask, jsonify, request
+from flask_swagger_ui import get_swaggerui_blueprint
+import mysql.connector
+
 # Define paths
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from flask import Flask, jsonify, request
-from flask_swagger_ui import get_swaggerui_blueprint
-import mysql.connector
-import os
+
 
 app = Flask(__name__)
 MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
@@ -198,15 +199,70 @@ def get_chat_messages(chat_id):
 
 @app.route('/api/chats/<int:chat_id>/messages', methods=['POST'])
 def send_chat_message(chat_id):
+    """
+    Create a new chat message in a specific chat. The database automatically generates
+    message_id (AUTO_INCREMENT). The frontend should not send message_id.
+
+    Expected JSON body (example):
+    {
+        "user_id": 123,
+        "sender_type": "user",        # or "assistant" or "system"
+        "message_text": "Hello world"
+    }
+    """
     data = request.json
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO chat_messages (chat_id, user_id, sender_type, message_text) VALUES (%s, %s, %s, %s)",
-                   (chat_id, data['user_id'], data['sender_type'], data['message_text']))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(data), 201
+    if not data:
+        return jsonify({"error": "Missing JSON body"}), 400
+
+    # Validate required fields
+    user_id = data.get('user_id')
+    sender_type = data.get('sender_type')
+    message_text = data.get('message_text')
+
+    missing_fields = []
+    if user_id is None:
+        missing_fields.append("user_id")
+    if sender_type is None:
+        missing_fields.append("sender_type")
+    if message_text is None:
+        missing_fields.append("message_text")
+    if missing_fields:
+        return jsonify({"error": f"Missing required field(s): {', '.join(missing_fields)}"}), 400
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Insert only the fields we need; MySQL auto-generates `message_id`
+        insert_query = """
+            INSERT INTO chat_messages (chat_id, user_id, sender_type, message_text) 
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (chat_id, user_id, sender_type, message_text))
+
+        new_message_id = cursor.lastrowid  # The auto-generated primary key
+        conn.commit()
+
+        # Fetch the newly inserted record so we can return it
+        select_query = "SELECT * FROM chat_messages WHERE message_id = %s"
+        cursor.execute(select_query, (new_message_id,))
+        new_message = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        # Return the newly created message, including the auto-generated message_id
+        return jsonify(new_message), 201
+
+    except mysql.connector.Error as db_err:
+        # Handle database-related errors
+        print(f"MySQL Error: {db_err}")
+        return jsonify({"error": "Database error", "details": str(db_err)}), 500
+    except Exception as e:
+        # Handle any other unexpected exceptions
+        print(f"Unexpected Error: {e}")
+        return jsonify({"error": "Unexpected error occurred.", "details": str(e)}), 500
+
 
 
 @app.route('/api/content_tracking', methods=['GET'])
