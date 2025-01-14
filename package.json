@@ -3,7 +3,9 @@
   "scripts": {
     "start:frontend": "cd frontend && npm run dev",
     "start:backend": "cd backend && python noovox/server.py",
+    "deploy:backend": "cd backend && python noovox/server.py --deploy",
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "deploy": "concurrently \"npm run deploy:backend\" \"npm run start:frontend\"",
     "test:e2e:full_stack": "concurrently -k \"npm run start:backend\" \"npm run start:frontend\" \"wait-on http://localhost:5173 && wait-on http://localhost:5000 && npx playwright test e2e\""
   },
   "devDependencies": {

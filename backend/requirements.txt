@@ -59,3 +59,5 @@ flask-swagger-ui~=4.11.1
 fuzzywuzzy~=0.18.0
 pytest==8.3.4
 flask_cors==5.0.0
+argparse==1.4.0
+python-dotenv==1.0.1
