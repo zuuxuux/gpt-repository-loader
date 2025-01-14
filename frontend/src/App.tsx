@@ -2,24 +2,29 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import SideNav from './components/SideNav';
 import ChatContainer from './components/ChatContainer';
-import { getUser } from '@/lib/utils';
-import { User } from '@/lib/types';
+import { getUser, getChatForUser } from '@/lib/utils';
+import { User, Chat } from '@/lib/types';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [chat, setChat] = useState<Chat | null>(null);
 
   useEffect(() => {
-    async function initUser() {
+    async function initUserAndChat() {
       try {
-        // Example: create user "John Doe" once on startup
-        const newUser = await getUser('John Doe', 'john.doe@example.com');
-        setUser(newUser);
+        // 1) Get or create user
+        const foundUser = await getUser('John Doe', 'john.doe@example.com');
+        setUser(foundUser);
+
+        // 2) Now that we have a user, get or create a chat
+        const foundChat = await getChatForUser(foundUser.user_id);
+        setChat(foundChat);
       } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('Error initializing user or chat:', error);
       }
     }
 
-    initUser();
+    initUserAndChat();
   }, []);
 
   return (
