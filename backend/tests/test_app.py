@@ -13,7 +13,6 @@ def client():
     2. Configures the Flask test client in TESTING mode.
     3. Yields the Flask test client.
     """
-    print("\n--- Starting client fixture ---")
     
     # 1. Truncate tables in the DB
     mysql_host = os.environ.get("MYSQL_HOST", "test-db")
@@ -21,19 +20,13 @@ def client():
     mysql_password = os.environ.get("MYSQL_PASSWORD", "password")
     mysql_database = os.environ.get("MYSQL_DATABASE", "noovox")
 
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!! test !!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(f"MYSQL_HOST: {mysql_host}")
-    print(f"MYSQL_USER: {mysql_user}")
-    print(f"MYSQL_PASSWORD: {mysql_password}")
-    print(f"MYSQL_DATABASE: {mysql_database}")
-
     conn = mysql.connector.connect(
         host=mysql_host,
         user=mysql_user,
         password=mysql_password,
         database=mysql_database
     )
-    print(f"Connected to database: {os.environ.get('MYSQL_DATABASE', 'noovox')}")
+    (f"Connected to database: {os.environ.get('MYSQL_DATABASE', 'noovox')}")
     
     cursor = conn.cursor()
     tables_to_clear = ["chat_messages", "chats", "users", "content_tracking"]
@@ -42,37 +35,29 @@ def client():
     for table in tables_to_clear:
         cursor.execute(f"SELECT COUNT(*) FROM {table}")
         count = cursor.fetchone()[0]
-        print(f"Before truncate: {table} has {count} rows")
 
     # Disable foreign key checks
-    print("Disabling foreign key checks")
     cursor.execute("SET FOREIGN_KEY_CHECKS=0")
 
     for table in tables_to_clear:
-        print(f"Truncating table: {table}")
         cursor.execute(f"TRUNCATE TABLE {table}")
 
     # Re-enable foreign key checks
-    print("Re-enabling foreign key checks")
     cursor.execute("SET FOREIGN_KEY_CHECKS=1")
     
     # Check table contents after truncate
     for table in tables_to_clear:
         cursor.execute(f"SELECT COUNT(*) FROM {table}")
         count = cursor.fetchone()[0]
-        print(f"After truncate: {table} has {count} rows")
     
     # Commit changes and clean up DB connection
-    print("Committing changes")
     conn.commit()
     cursor.close()
     conn.close()
 
     # 2. Configure Flask test client
-    print("Configuring Flask test client")
     app.config['TESTING'] = True
     with app.test_client() as flask_client:
-        print("--- Client fixture setup complete ---")
         yield flask_client
 
 def test_get_users_returns_200(client):
