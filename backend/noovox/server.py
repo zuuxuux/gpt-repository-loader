@@ -109,14 +109,56 @@ def get_chats():
 
 @app.route('/api/chats', methods=['POST'])
 def create_chat():
+    """
+    Create a new chat. 
+    - The database automatically generates chat_id (AUTO_INCREMENT) and created_at (DEFAULT CURRENT_TIMESTAMP).
+    - The frontend should only send user_id in the JSON body, e.g.:
+        {
+            "user_id": 123
+        }
+    """
     data = request.json
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO chats (user_id) VALUES (%s)", (data['user_id'],))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(data), 201
+    if not data:
+        return jsonify({"error": "Missing JSON body"}), 400
+
+    # Make sure 'user_id' is present
+    user_id = data.get('user_id')
+    if user_id is None:
+        return jsonify({"error": "Missing required field 'user_id'"}), 400
+
+    try:
+        conn = get_db_connection()
+        # Use dictionary cursor so we can return data as a dict
+        cursor = conn.cursor(dictionary=True)
+        
+        # Insert only user_id; MySQL will auto-generate chat_id and created_at
+        insert_query = "INSERT INTO chats (user_id) VALUES (%s)"
+        cursor.execute(insert_query, (user_id,))
+        
+        # Grab the auto-generated ID
+        new_chat_id = cursor.lastrowid
+
+        conn.commit()
+
+        # Fetch the newly created record so we can return it
+        cursor.execute("SELECT chat_id, user_id, created_at FROM chats WHERE chat_id = %s", (new_chat_id,))
+        new_chat = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+        
+        # Return the newly created chat (including auto-generated fields)
+        return jsonify(new_chat), 201
+
+    except mysql.connector.Error as db_err:
+        # Handle database-related errors (e.g., foreign key constraint fails if user_id doesn't exist)
+        print(f"MySQL Error: {db_err}")
+        return jsonify({"error": "Database error", "details": str(db_err)}), 500
+    except Exception as e:
+        # Handle any other unexpected exceptions
+        print(f"Unexpected Error: {e}")
+        return jsonify({"error": "Unexpected error occurred.", "details": str(e)}), 500
+
 
 
 @app.route('/api/chats/<int:chat_id>', methods=['GET'])
