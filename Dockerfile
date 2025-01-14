@@ -15,6 +15,9 @@ RUN npm run build
 # Stage 2: Build the Python back-end image
 # ----------------------------------------
 FROM python:3.13-slim
+RUN apt-get update && apt-get install -y default-mysql-client
+RUN apt-get install -y netcat-traditional
+
 WORKDIR /app
 
 # Copy requirements early for caching
