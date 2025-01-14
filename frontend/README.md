@@ -27,6 +27,11 @@ Uses vanilla javascript and html at the moment
 ## Setup for testing:
 Run `npx playwright install` to install browser binaries, and `sudo apt-get install libevent-2.1-7t64 libavif16` for dependencies
 
+Test by running:
+```bash
+npm run test:e2e
+```
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:

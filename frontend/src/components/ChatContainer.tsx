@@ -82,6 +82,11 @@ const ChatContainer: React.FC = () => {
             key={message.id}
             content={message.content}
             variant={message.sender}
+            dataTestId={
+              message.id === '1' && message.sender === 'system'
+                ? 'default-message'
+                : 'chat-bubble'
+            }
           />
         ))}
 
@@ -92,13 +97,14 @@ const ChatContainer: React.FC = () => {
       {/* Fixed input area at bottom of the card */}
       <div className={styles.inputArea}>
         <form onSubmit={handleSend} className={styles.inputContainer}>
-        <InputArea
-          onChange={(e) => setInput(e.target.value)}
-          value={input}
-          placeholder="Type a message..."
-          disabled={isLoading}
-        />
-          <SendButton 
+          <InputArea
+            onChange={(e) => setInput(e.target.value)}
+            value={input}
+            placeholder="Type a message..."
+            disabled={isLoading}
+            data-testid="chat-input"
+          />
+          <SendButton
             size="lg"
             disabled={false}
           />

@@ -16,9 +16,9 @@ const SendButton: React.FC<SendButtonProps> = ({
 }) => {
   // Apply both the base sendButton class and size variant
   const classNames = `${styles.sendButton} ${styles[size]}`;
-
   return (
     <button
+      data-testid="send-button"
       className={classNames}
       onClick={onClick}
       disabled={disabled}
