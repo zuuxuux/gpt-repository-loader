@@ -1,14 +1,18 @@
+import argparse
 import os
 import sys
 
+import dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 import mysql.connector
 
-from noovox.core import DummyProvider
+from noovox.core import DummyProvider, OpenAIProvider
 
-llm = DummyProvider()
+assert dotenv.load_dotenv
+
+llm = None
 
 # Define paths
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -342,7 +346,43 @@ def track_content():
 def home():
     return "Noovox Backend is Running!"
 
+def parse_args() -> argparse.Namespace:
+    """
+    Parses command-line arguments, e.g.:
+      python server.py --deploy
+    """
+    parser = argparse.ArgumentParser(description="Noovox server runner")
+    parser.add_argument(
+        "--deploy",
+        action="store_true",
+        help="Use OpenAIProvider for LLM (production mode). If not provided, defaults to DummyProvider (dev mode)."
+    )
+    return parser.parse_args()
+
+
+def main():
+    # 1) Parse CLI args
+    args = parse_args()
+
+    # 2) Decide which LLM provider to use
+    global llm
+    if args.deploy:
+        print("Using OpenAIProvider for LLM (deploy mode)")
+        llm = OpenAIProvider(
+            api_key=os.getenv("OPEN_AI_KEY"),  # Ensure this is set in your environment
+            model="gpt-4",
+            temperature=0.2
+        )
+        debug_mode = False
+    else:
+        print("Using DummyProvider for LLM (dev mode)")
+        llm = DummyProvider()
+        debug_mode = True
+
+    # 3) Run the app
+    print("Swagger UI URL: http://localhost:5000/swagger")
+    app.run(debug=debug_mode, host="0.0.0.0", port=5000)
+
 
 if __name__ == "__main__":
-    print("Swagger UI URL: http://localhost:5000/swagger")
-    app.run(debug=True)
+    main()
