@@ -1,112 +1,87 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { InputArea } from "@/components/ui/InputArea"
 import { Card } from "@/components/ui/Card"
 import { ChatBubble } from "@/components/ui/ChatBubble"
 import { SendButton } from "@/components/ui/SendButton"
 import styles from './ChatContainer.module.css'
 
-interface Message {
-  id: string
-  content: string
-  sender: 'user' | 'system'
-  timestamp: Date
+// Import your new utils & types
+import { getChatMessages } from '@/lib/utils'
+import { ChatMessage, Chat } from '@/lib/types'
+
+interface ChatContainerProps {
+  chat: Chat | null; // We'll pass in the chat object from the parent (e.g., App.tsx)
 }
 
-const defaultMessages: Message[] = [
-  {
-    id: '1',
-    content: 'Hi John, what was the highlight of your week?',
-    sender: 'system',
-    timestamp: new Date()
-  }
-]
-
-const ChatContainer: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>(defaultMessages)
+const ChatContainer: React.FC<ChatContainerProps> = ({ chat }) => {
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  // The sentinel <div> at the bottom of the messages
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  // Whenever we update messages, scroll the sentinel into view
+  // On mount or when chat changes, load the messages
+  useEffect(() => {
+
+    async function loadMessages() {
+      try {
+        if (!chat) return;
+        const chatMessages = await getChatMessages(chat.chat_id)
+        setMessages(chatMessages)
+      } catch (error) {
+        console.error('Error loading chat messages:', error)
+      }
+    }
+
+    loadMessages()
+  }, [chat])
+
+  // Scroll to bottom when messages change
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || isLoading) return
+    if (!input.trim() || !chat || isLoading) return
 
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: input,
-      sender: 'user',
-      timestamp: new Date()
-    }
-    setMessages(prev => [...prev, userMessage])
+    // TODO: In a later step, we will call the POST /api/chats/:chat_id/messages endpoint
+    // to add this new message and fetch the result. For now, we can just log or stub it out.
+
+    console.log('Sending message:', input)
     setInput('')
-    setIsLoading(true)
 
-    // Simulate sending message to server
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/chats`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input })
-      })
-      const data = await response.json()
-
-      // Add system message
-      const systemMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.response,
-        sender: 'system',
-        timestamp: new Date()
-      }
-      setMessages(prev => [...prev, systemMessage])
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setIsLoading(false)
-    }
+    // We'll handle sending to the server in a future commit
   }
 
   return (
     <Card className={styles.chatContainer} data-testid="chat-container">
-      {/* Our scrollable messages area */}
       <div className={styles.messagesArea}>
         {messages.map((message) => (
           <ChatBubble
-            key={message.id}
-            content={message.content}
-            variant={message.sender}
-            dataTestId={
-              message.id === '1' && message.sender === 'system'
-                ? 'default-message'
-                : 'chat-bubble'
-            }
+            key={message.message_id}
+            content={message.message_text}
+            variant={message.sender_type === 'user' ? 'user' : 'system'}
+            dataTestId={'chat-bubble'}
           />
         ))}
-
-        {/* Sentinel that we scroll to when new messages come in */}
+        {/* Sentinel for scrolling */}
         <div ref={bottomRef}></div>
       </div>
 
-      {/* Fixed input area at bottom of the card */}
+      {/* Input area */}
       <div className={styles.inputArea}>
         <form onSubmit={handleSend} className={styles.inputContainer}>
           <InputArea
             onChange={(e) => setInput(e.target.value)}
             value={input}
             placeholder="Type a message..."
-            disabled={isLoading}
+            disabled={isLoading || !chat}
             data-testid="chat-input"
           />
           <SendButton
             size="lg"
-            disabled={false}
+            disabled={!chat}
           />
         </form>
       </div>

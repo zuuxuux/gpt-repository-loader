@@ -10,3 +10,14 @@ export interface Chat {
     user_id: number;
     created_at?: string;
 }
+
+export type SenderType = 'user' | 'noovox';
+
+export interface ChatMessage {
+  message_id: number;
+  chat_id: number;
+  user_id: number;
+  sender_type: SenderType;
+  message_text: string;
+  sent_at?: string;
+}

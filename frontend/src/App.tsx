@@ -33,7 +33,7 @@ function App() {
       <div className="mainContent">
         {/* Chat Section */}
         <div className="chatContainer">
-          <ChatContainer />
+          <ChatContainer chat={chat} />
         </div>
 
         {/* Topic Cards Section (Optional) */}
