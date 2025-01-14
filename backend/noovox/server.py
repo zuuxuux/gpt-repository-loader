@@ -10,7 +10,7 @@ import mysql.connector
 
 from noovox.core import DummyProvider, OpenAIProvider
 
-assert dotenv.load_dotenv
+assert dotenv.load_dotenv()
 
 llm = None
 
@@ -39,6 +39,13 @@ MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
 MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
 MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'password')
 MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', 'noovox')
+OPENAI_KEY = os.environ.get('OPEN_AI_KEY', None)
+
+print(f"MYSQL_HOST: {MYSQL_HOST}")
+print(f"MYSQL_USER: {MYSQL_USER}")
+print(f"MYSQL_PASSWORD: {MYSQL_PASSWORD}")
+print(f"MYSQL_DATABASE: {MYSQL_DATABASE}")
+print(f"OPENAI_KEY: {OPENAI_KEY}")
 
 swagger_url = '/swagger'
 swagger_ui_blueprint = get_swaggerui_blueprint(
@@ -60,12 +67,19 @@ def get_db_connection():
 
 @app.route('/api/users', methods=['GET'])
 def get_users():
+    print("Get users")
     conn = get_db_connection()
+    print("Get users 3")
     cursor = conn.cursor(dictionary=True)
+    print("Get users 3")
     cursor.execute("SELECT * FROM users")
+    print("Get user4")
     users = cursor.fetchall()
+    print("Get users 5")
     cursor.close()
+    print("Get users 6")
     conn.close()
+    print("Got users")
     return jsonify(users)
 
 
@@ -385,4 +399,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("HELLO")
     main()

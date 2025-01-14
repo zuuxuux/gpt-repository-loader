@@ -17,9 +17,10 @@ export async function createUser(username: string, email: string): Promise<User>
 
 export async function getUser(username: string, email: string): Promise<User> {
     try {
+        console.log('Fetching user:', username, email);
         // 1) Fetch all existing users
         const allUsers: User[] = await callApi('/users');
-
+        console.log('All users:', allUsers);
         // 2) Check if we have a match by email
         const existing = allUsers.find((u) => u.email === email);
 
@@ -97,9 +98,11 @@ export async function sendChatMessage(
       sender_type: 'user',
       message_text: messageText,
     };
-  
-    return callApi(`/chats/${chatId}/messages`, {
-      method: 'POST',
-      body: JSON.stringify(payload),
+    console.log('Sending message:', payload);
+    let response = callApi(`/chats/${chatId}/messages`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
     });
+    console.log('Response:', response);
+    return response;
   }

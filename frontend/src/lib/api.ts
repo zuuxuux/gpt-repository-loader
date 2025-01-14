@@ -15,6 +15,7 @@ export async function callApi(
   endpoint: string,
   options?: RequestInit
 ): Promise<any> {
+  console.log(`Calling API: ${API_BASE_URL}${endpoint}`);
   const url = `${API_BASE_URL}${endpoint}`;
 
   const res = await fetch(url, {
@@ -24,7 +25,7 @@ export async function callApi(
     },
     ...options,
   });
-
+  console.log(`API response: ${res.status}`);
   if (!res.ok) {
     // Throwing an error here will let us catch it in a try/catch in the UI
     throw new Error(`API request failed with status ${res.status}`);

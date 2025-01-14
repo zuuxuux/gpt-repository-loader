@@ -12,6 +12,7 @@ function App() {
   useEffect(() => {
     async function initUserAndChat() {
       try {
+        console.log('Initializing user and chat...');
         // 1) Get or create user
         const foundUser = await getUser('John Doe', 'john.doe@example.com');
         setUser(foundUser);
