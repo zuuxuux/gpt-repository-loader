@@ -1,9 +1,27 @@
-// src/App.tsx
-import ChatContainer from './components/ChatContainer';
+import { useEffect, useState } from 'react';
 import './App.css';
 import SideNav from './components/SideNav';
+import ChatContainer from './components/ChatContainer';
+import { getUser } from '@/lib/utils';
+import { User } from '@/lib/types';
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    async function initUser() {
+      try {
+        // Example: create user "John Doe" once on startup
+        const newUser = await getUser('John Doe', 'john.doe@example.com');
+        setUser(newUser);
+      } catch (error) {
+        console.error('Error creating user:', error);
+      }
+    }
+
+    initUser();
+  }, []);
+
   return (
     <div className="appContainer">
       {/* Main Content and Nav */}
