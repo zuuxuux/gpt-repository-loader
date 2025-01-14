@@ -80,3 +80,26 @@ export async function getChatForUser(userId: number): Promise<Chat> {
 export async function getChatMessages(chatId: number): Promise<ChatMessage[]> {
     return callApi(`/chats/${chatId}/messages`);
 }
+
+/**
+ * sendChatMessage - POST a new user message to /api/chats/:chat_id/messages
+ *
+ * The backend returns an array: [ {user_message}, {assistant_message} ]
+ * which we can merge into our local messages state.
+ */
+export async function sendChatMessage(
+    chatId: number,
+    userId: number,
+    messageText: string
+  ): Promise<ChatMessage[]> {
+    const payload = {
+      user_id: userId,
+      sender_type: 'user',
+      message_text: messageText,
+    };
+  
+    return callApi(`/chats/${chatId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
