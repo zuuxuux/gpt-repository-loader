@@ -2,8 +2,13 @@ import os
 import sys
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 import mysql.connector
+
+from noovox.core import DummyProvider
+
+llm = DummyProvider()
 
 # Define paths
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -14,6 +19,18 @@ if project_root not in sys.path:
 
 
 app = Flask(__name__)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+                        "http://localhost:5173",  # dev
+                        "http://localhost:3000",  # "prod"
+                    ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
+
 MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
 MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
 MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'password')
@@ -223,15 +240,8 @@ def get_chat_messages(chat_id):
 @app.route('/api/chats/<int:chat_id>/messages', methods=['POST'])
 def send_chat_message(chat_id):
     """
-    Create a new chat message in a specific chat. The database automatically generates
-    message_id (AUTO_INCREMENT). The frontend should not send message_id.
-
-    Expected JSON body (example):
-    {
-        "user_id": 123,
-        "sender_type": "user",        # or "assistant" or "system"
-        "message_text": "Hello world"
-    }
+    Create a new chat message in a specific chat. If the sender_type is 'user',
+    automatically generate an assistant response.
     """
     data = request.json
     if not data:
@@ -256,33 +266,49 @@ def send_chat_message(chat_id):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Insert only the fields we need; MySQL auto-generates `message_id`
+        # Insert the user's message
         insert_query = """
             INSERT INTO chat_messages (chat_id, user_id, sender_type, message_text) 
             VALUES (%s, %s, %s, %s)
         """
         cursor.execute(insert_query, (chat_id, user_id, sender_type, message_text))
-
-        new_message_id = cursor.lastrowid  # The auto-generated primary key
+        user_message_id = cursor.lastrowid
         conn.commit()
 
-        # Fetch the newly inserted record so we can return it
-        select_query = "SELECT * FROM chat_messages WHERE message_id = %s"
-        cursor.execute(select_query, (new_message_id,))
-        new_message = cursor.fetchone()
+        # If this is a user message, generate and store an assistant response
+        response_message = None
+        if sender_type == 'user':
+            # Generate assistant response using the DummyProvider
+            assistant_response = llm(message_text)
+            
+            # Store the assistant's response
+            cursor.execute(insert_query, (chat_id, user_id, 'assistant', assistant_response))
+            assistant_message_id = cursor.lastrowid
+            conn.commit()
+            
+            # Fetch both messages
+            cursor.execute(
+                "SELECT * FROM chat_messages WHERE message_id IN (%s, %s)", 
+                (user_message_id, assistant_message_id)
+            )
+            response_message = cursor.fetchall()
+        else:
+            # If it's not a user message, just fetch the single message
+            cursor.execute(
+                "SELECT * FROM chat_messages WHERE message_id = %s", 
+                (user_message_id,)
+            )
+            response_message = cursor.fetchall()
 
         cursor.close()
         conn.close()
 
-        # Return the newly created message, including the auto-generated message_id
-        return jsonify(new_message), 201
+        return jsonify(response_message), 201
 
     except mysql.connector.Error as db_err:
-        # Handle database-related errors
         print(f"MySQL Error: {db_err}")
         return jsonify({"error": "Database error", "details": str(db_err)}), 500
     except Exception as e:
-        # Handle any other unexpected exceptions
         print(f"Unexpected Error: {e}")
         return jsonify({"error": "Unexpected error occurred.", "details": str(e)}), 500
 

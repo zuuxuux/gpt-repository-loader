@@ -51,7 +51,7 @@ const ChatContainer: React.FC = () => {
 
     // Simulate sending message to server
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/chats`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })

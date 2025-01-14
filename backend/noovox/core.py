@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -12,7 +13,7 @@ import sys
 import os
 from openai import OpenAI
 from fuzzywuzzy import fuzz
-from backend.constants import General, Keys
+from noovox.constants import General, Keys
 import logging
 
 
@@ -1138,3 +1139,112 @@ class NoovoxSearcher:
             self.logger.error(f"Fatal error: {str(e)}")
             print(f"\nFatal error: {str(e)}")
             print("Check the log file for details.")
+
+
+
+class LLMProvider(ABC):
+    """
+    Abstract base class for LLM providers.
+    Subclasses must implement the __call__ method.
+    """
+    @abstractmethod
+    def __call__(self, input_message: str) -> str:
+        """
+        Process input message and return LLM response.
+        
+        Args:
+            input_message (str): The input text to send to the LLM
+            
+        Returns:
+            str: The LLM's response text
+        """
+        pass
+
+
+class OpenAIProvider(LLMProvider):
+    """
+    OpenAI implementation of LLMProvider.
+    Supports configuration via constructor and per-call parameters.
+    
+    Args:
+        api_key (str, optional): OpenAI API key. Defaults to OPENAI_KEY environment variable.
+        model (str, optional): Model to use. Defaults to "gpt-4".
+        temperature (float, optional): Sampling temperature. Defaults to 0.2.
+        **kwargs: Additional parameters to pass to OpenAI API.
+    """
+    def __init__(self, 
+                 api_key: str = None,
+                 model: str = "gpt-4o-mini",
+                 temperature: float = 0.2,
+                 **kwargs):
+        try:
+            import openai
+            import os
+            
+            # Use provided API key or fall back to environment variable
+            self.api_key = api_key or os.getenv('OPENAI_KEY')
+            if not self.api_key:
+                raise ValueError("No API key provided and OPENAI_KEY environment variable not set")
+            
+            self.client = openai.OpenAI(api_key=self.api_key)
+            self.default_model = model
+            self.default_temperature = temperature
+            self.default_kwargs = kwargs
+            
+        except ImportError:
+            raise ImportError("OpenAI package not installed. Run: pip install openai")
+        except Exception as e:
+            raise Exception(f"Failed to initialize OpenAI client: {str(e)}")
+
+    def __call__(self, 
+                 input_message: str,
+                 model: str = None,
+                 temperature: float = None,
+                 **kwargs) -> str:
+        """
+        Send message to OpenAI API and return response.
+        
+        Args:
+            input_message (str): Message to send to OpenAI
+            model (str, optional): Override default model for this call
+            temperature (float, optional): Override default temperature for this call
+            **kwargs: Additional parameters to override defaults for this call
+            
+        Returns:
+            str: Response from OpenAI
+        """
+        try:
+            # Merge default and call-specific parameters
+            call_kwargs = self.default_kwargs.copy()
+            call_kwargs.update(kwargs)
+            
+            response = self.client.chat.completions.create(
+                model=model or self.default_model,
+                temperature=temperature or self.default_temperature,
+                messages=[{
+                    "role": "user",
+                    "content": input_message
+                }],
+                **call_kwargs
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            raise Exception(f"OpenAI API call failed: {str(e)}")
+
+
+class DummyProvider(LLMProvider):
+    """
+    Dummy implementation of LLMProvider that simply echoes back a formatted version
+    of the input message. Useful for testing and development.
+    """
+    def __call__(self, input_message: str) -> str:
+        """
+        Returns a simple formatted response containing the input message.
+        
+        Args:
+            input_message (str): Any input message
+            
+        Returns:
+            str: A formatted response containing the input message
+        """
+        return f"Responding to: {input_message}"
