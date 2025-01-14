@@ -381,7 +381,7 @@ def main():
 
     # 3) Run the app
     print("Swagger UI URL: http://localhost:5000/swagger")
-    app.run(debug=debug_mode, host="0.0.0.0", port=5000)
+    app.run(debug=debug_mode)
 
 
 if __name__ == "__main__":
