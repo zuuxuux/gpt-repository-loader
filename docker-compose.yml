@@ -52,6 +52,7 @@ services:
         /app/backend/scripts/wait-for localhost:5000 --timeout=60 -- echo 'Backend is up!' &&
 
         echo 'Running frontend tests (Playwright)...' &&
+        cd /app/frontend &&
         npx playwright test &&
         PLAYWRIGHT_EXIT=$$? &&
         if [ $$PYTEST_EXIT -ne 0 ]; then

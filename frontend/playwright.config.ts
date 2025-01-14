@@ -5,7 +5,13 @@ export default defineConfig({
   timeout: 30_000,           // 30 seconds per test
   use: {
     headless: true,          // Run in headless mode; set false if you want a visible browser
-    baseURL: 'http://localhost:5173', 
+    baseURL: 'http://localhost:5173',
     // ^ If your front-end dev server is on port 5173 (Vite default) or 3000 (CRA), adjust accordingly
+
+  },
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:5173',
+    reuseExistingServer: true,
   },
 });

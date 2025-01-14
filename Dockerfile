@@ -7,7 +7,20 @@ RUN apt-get update && apt-get install -y \
     nodejs npm \
     netcat-traditional \
     default-mysql-client \
-    # (Optional) any libs needed for Playwright or other build steps
+    # Required dependencies for Playwright
+    # libnss3 \
+    # libnspr4 \
+    # libatk1.0-0 \
+    # libatk-bridge2.0-0 \
+    # libcups2 \
+    # libdrm2 \
+    # libxkbcommon0 \
+    # libxcomposite1 \
+    # libxdamage1 \
+    # libxfixes3 \
+    # libxrandr2 \
+    # libgbm1 \
+    # libasound2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -32,6 +45,8 @@ RUN npm install
 
 # (Optional) Install Playwright, if you want to run E2E tests here
 RUN npm install -g playwright
+RUN npx playwright install
+RUN npx playwright install-deps 
 
 COPY frontend/ ./
 RUN npm run build

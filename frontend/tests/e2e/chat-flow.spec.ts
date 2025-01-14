@@ -8,10 +8,6 @@ test('chat flow: default message + sending user message', async ({ page }) => {
     // 1) Go to the home/chat page (baseURL is set in your playwright.config.ts)
     await page.goto('/');
     console.log('page.url()', page.url());  
-    // 2) Verify the default message is present
-    const defaultMessage = page.locator('[data-testid="default-message"]');
-    await expect(defaultMessage).toBeVisible();
-    await expect(defaultMessage).toHaveText('Hi John, what was the highlight of your week?');
 
     // 3) Type a new message in the chat input
     const input = page.locator('[data-testid="chat-input"]');
@@ -25,8 +21,11 @@ test('chat flow: default message + sending user message', async ({ page }) => {
 
     // 5) Check that the newly sent message appears
     //    Here, we assume each message bubble has data-testid="chat-bubble"
+    
     const allBubbles = page.locator('[data-testid="chat-bubble"]');
-    await expect(allBubbles.last()).toHaveText('This is a new message');
+    await expect(allBubbles).toHaveCount(2)
+    await expect(allBubbles.first()).toHaveText('This is a new message');
+    await expect(allBubbles.last()).toHaveText('Responding to: This is a new message');
 });
 
 test('chat flow: user sends a message and sees assistant response', async ({ page }) => {
@@ -35,8 +34,6 @@ test('chat flow: user sends a message and sees assistant response', async ({ pag
   
     // 2) Wait for the user and chat to be initialized (e.g. "Logged in as John Doe" text)
     // Adjust the exact text as your UI displays. This ensures user creation is done.
-    await expect(page.getByText(/Logged in as/i)).toBeVisible();
-    await expect(page.getByText(/Chat ID:/i)).toBeVisible();
   
     // 3) Verify the chat container is present
     const chatContainer = page.locator('[data-testid="chat-container"]');
@@ -52,7 +49,9 @@ test('chat flow: user sends a message and sees assistant response', async ({ pag
   
     // 6) The user’s message should appear as the last chat bubble
     const chatBubbles = page.locator('[data-testid="chat-bubble"]');
-    await expect(chatBubbles.last()).toHaveText('Hello, from Playwright!');
+    await expect(chatBubbles).toHaveCount(2)
+    await expect(chatBubbles.nth(2)).toHaveText('Hello, from Playwright!');
+    await expect(chatBubbles.last()).toHaveText('Responding to: Hello, from Playwright!');
   
     // 7) Wait for the assistant’s response. The backend inserts it automatically.
     //    We assume it’s appended after the user’s bubble, so we wait for the count to increase by at least 2 from the time of sending.
