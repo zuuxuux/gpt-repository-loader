@@ -23,6 +23,9 @@ Uses vanilla javascript and html at the moment
     - copy `.env.local.example` -> `.env.local`
 3. Run a dev version of the app:
     - `npm run dev`
+  
+## Setup for testing:
+Run `npx playwright install` to install browser binaries, and `sudo apt-get install libevent-2.1-7t64 libavif16` for dependencies
 
 ## Expanding the ESLint configuration
 

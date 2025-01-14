@@ -74,7 +74,7 @@ const ChatContainer: React.FC = () => {
   }
 
   return (
-    <Card className={styles.chatContainer}>
+    <Card className={styles.chatContainer} data-testid="chat-container">
       {/* Our scrollable messages area */}
       <div className={styles.messagesArea}>
         {messages.map((message) => (
